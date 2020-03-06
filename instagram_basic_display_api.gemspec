@@ -1,11 +1,9 @@
 Gem::Specification.new do |s|
   s.name = %q{instagram_basic_display_api}
-  s.version = "0.0.0"
+  s.version = "0.0.1"
   s.date = %q{2020-03-05}
   s.summary = %q{Instagram Basic Display API}
-  s.files = [
-    "lib/instagram_basic_display_api.rb"
-  ]
+  s.files = Dir["{lib,spec}/**/*"]
   s.require_paths = ["lib"]
   s.authors = ["Craig Phares"]
   s.licenses = ['MIT']
