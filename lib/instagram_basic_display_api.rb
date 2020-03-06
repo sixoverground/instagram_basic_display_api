@@ -1,3 +1,4 @@
+require 'instagram_basic_display_api/error'
 require 'instagram_basic_display_api/configuration'
 require 'instagram_basic_display_api/api'
 require 'instagram_basic_display_api/client'

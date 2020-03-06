@@ -6,6 +6,7 @@ module InstagramBasicDisplayAPI
         id = args.first || 'me'
         fields = options[:fields] || 'id,account_type,media_count,username'
         response = connection.get("#{id}?fields=#{fields}&access_token=#{access_token}")
+        puts "user: #{response.body}"
         response.body
       end
 
