@@ -15,7 +15,7 @@ Sample Application
 
 ```ruby
 # Initialize the client with your access token
-client = InstagramBasicDisplayAPI.client(access_token)
+client = InstagramBasicDisplayAPI.client(access_token: access_token)
 
 # Fetch the user account
 user = client.user
