@@ -6,7 +6,7 @@ module InstagramBasicDisplayAPI
         id = args.first
         fields = options[:fields] || 'id,caption,media_type,media_url,permalink,thumbnail_url,timestamp,username'
         response = connection.get("#{id}?fields=#{fields}&access_token=#{access_token}")
-        puts "media item: #{response.body}"
+        # puts "media item: #{response.body}"
         response.body
       end
 
@@ -15,8 +15,8 @@ module InstagramBasicDisplayAPI
         id = args.first
         fields = options[:fields] || 'id,media_type,media_url,permalink,thumbnail_url,timestamp,username'
         response = connection.get("#{id}/children?fields=#{fields}&access_token=#{access_token}")
-        puts "media children: #{response.body.data}"
-        response.body.data
+        # puts "media children: #{response.body.data}"
+        response.body
       end
     end
   end

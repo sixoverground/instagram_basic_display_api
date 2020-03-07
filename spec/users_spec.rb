@@ -27,16 +27,16 @@ describe InstagramBasicDisplayAPI::Client do
       context 'with user ID passed' do
         it 'should return a list of recent media items for the given user' do
           recent_media = @client.user_recent_media('me')
-          expect(recent_media).to be_a Array
-          expect(recent_media.first.username).to eq(ENV['USERNAME'])
+          expect(recent_media.data).to be_a Array
+          expect(recent_media.data.first.username).to eq(ENV['USERNAME'])
         end
       end
 
       context 'without user ID passed' do
         it 'should return a list of recent media items for the given user' do
           recent_media = @client.user_recent_media
-          expect(recent_media).to be_a Array
-          expect(recent_media.first.username).to eq(ENV['USERNAME'])
+          expect(recent_media.data).to be_a Array
+          expect(recent_media.data.first.username).to eq(ENV['USERNAME'])
         end
       end
     end

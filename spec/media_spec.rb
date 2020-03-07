@@ -17,7 +17,7 @@ describe InstagramBasicDisplayAPI::Client do
     describe '.media_children' do
       it 'should return list of children media for the given media item' do
         media = @client.media_children(ENV['MEDIA_ID'])
-        expect(media.first.username).to eq(ENV['USERNAME'])
+        expect(media.data.first.username).to eq(ENV['USERNAME'])
       end
     end
   end
