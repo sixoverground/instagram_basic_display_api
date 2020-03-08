@@ -14,7 +14,9 @@ module InstagramBasicDisplayAPI
         options = args.last.is_a?(Hash) ? args.pop : {}
         id = args.first || 'me'
         fields = options[:fields] || 'id,caption,media_type,media_url,permalink,thumbnail_url,timestamp,username'
-        response = connection.get("#{id}/media?fields=#{fields}&access_token=#{access_token}")
+        limit = options[:limit] || ''
+        after = options[:after] || ''
+        response = connection.get("#{id}/media?fields=#{fields}&access_token=#{access_token}&limit=#{limit}&after=#{after}")
         puts "user recent media: #{response.body}"
         response.body
       end
