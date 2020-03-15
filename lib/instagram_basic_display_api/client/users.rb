@@ -16,7 +16,9 @@ module InstagramBasicDisplayAPI
         fields = options[:fields] || 'id,caption,media_type,media_url,permalink,thumbnail_url,timestamp,username'
         limit = options[:limit] || ''
         after = options[:after] || ''
-        response = connection.get("#{id}/media?fields=#{fields}&access_token=#{access_token}&limit=#{limit}&after=#{after}")
+        url = "#{id}/media?fields=#{fields}&access_token=#{access_token}&limit=#{limit}&after=#{after}"
+        put "URL: #{url}"
+        response = connection.get(url)
         puts "user recent media: #{response.body}"
         response.body
       end
