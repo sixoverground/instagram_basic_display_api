@@ -6,7 +6,6 @@ module InstagramBasicDisplayAPI
   class RaiseHttpException < Faraday::Middleware
     def call(env)
       @app.call(env).on_complete do |response|
-        puts "response status: #{response[:status].to_i}"
         case response[:status].to_i
         when 400
           raise InstagramBasicDisplayAPI::BadRequest, error_message_400(response)
@@ -45,8 +44,6 @@ module InstagramBasicDisplayAPI
         # removed multi_json thanks to wesnolte's commit
         body = ::JSON.parse(body)
       end
-
-      puts "body: #{body}"
 
       if body.nil?
         nil

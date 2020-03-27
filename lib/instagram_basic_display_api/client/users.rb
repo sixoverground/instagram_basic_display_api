@@ -6,7 +6,6 @@ module InstagramBasicDisplayAPI
         id = args.first || 'me'
         fields = options[:fields] || 'id,account_type,media_count,username'
         response = connection.get("#{id}?fields=#{fields}&access_token=#{access_token}")
-        # puts "user: #{response.body}"
         response.body
       end
 
@@ -17,9 +16,7 @@ module InstagramBasicDisplayAPI
         limit = options[:limit] || ''
         after = options[:after] || ''
         url = "#{id}/media?fields=#{fields}&access_token=#{access_token}&limit=#{limit}&after=#{after}"
-        puts "URL: #{url}"
         response = connection.get(url)
-        puts "user recent media: #{response.body}"
         response.body
       end
     end
