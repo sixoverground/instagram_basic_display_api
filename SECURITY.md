@@ -2,8 +2,7 @@
 
 ## Supported Versions
 
-These versions of instagram_basic_display_api are
-currently being supported with security updates.
+The following versions are currently being supported with security updates.
 
 | Version | Supported          |
 | ------- | ------------------ |
@@ -12,7 +11,5 @@ currently being supported with security updates.
 
 ## Reporting a Vulnerability
 
-To report a vulnerability, enter an issue on GitHub. If the vulnerability
-is accepted, an pull request will be made and contributors will work to 
-marge it into the main branch. If the vulnerability is declined, the team
-does not feel it's a critical issue.
+If you believe you have found a security vulnerability, we encourage you to let us know right away. 
+We will investigate all legitimate reports and do our best to quickly fix the problem.
