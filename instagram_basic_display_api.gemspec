@@ -11,7 +11,7 @@ Gem::Specification.new do |s|
   s.homepage = 'https://github.com/sixoverground/instagram_basic_display_api'
 
   s.add_runtime_dependency('faraday', '>= 0.17.3', '< 2.8.0')
-  s.add_runtime_dependency('faraday_middleware', '~> 0.14.0')
+  s.add_runtime_dependency('faraday_middleware', '>= 0.14', '< 1.3')
 
   s.add_development_dependency('rspec', '~> 3.9', '>= 3.9.0')
   s.add_development_dependency('dotenv', '~> 2.7', '>= 2.7.5')
