@@ -14,5 +14,5 @@ Gem::Specification.new do |s|
   s.add_runtime_dependency('faraday_middleware', '>= 0.14', '< 1.3')
 
   s.add_development_dependency('rspec', '~> 3.9', '>= 3.9.0')
-  s.add_development_dependency('dotenv', '~> 2.7', '>= 2.7.5')
+  s.add_development_dependency('dotenv', '>= 2.7.5', '~> 3.0')
 end
