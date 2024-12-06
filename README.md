@@ -34,4 +34,7 @@ puts "#{media_item.media_url}"
 for media_item in client.media_children(media_id)
   puts "#{media_item.media_type}"
 end
+
+# Refresh the access token
+access_token = client.refresh_access_token
 ```
