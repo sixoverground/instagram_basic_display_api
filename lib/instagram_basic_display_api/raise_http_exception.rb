@@ -1,29 +1,26 @@
 require 'faraday'
+require 'json'
 
 # @private
 module InstagramBasicDisplayAPI
   # @private
   class RaiseHttpException < Faraday::Middleware
+    # Meta returns expired / invalid / revoked access-token errors as an
+    # OAuthException with code 190, frequently over HTTP 400 rather than 401.
+    # We surface those as Unauthorized so callers can rescue the correct class
+    # regardless of Meta's inconsistent status code.
+    OAUTH_ACCESS_TOKEN_ERROR_CODE = 190
+
     def call(env)
       @app.call(env).on_complete do |response|
-        case response[:status].to_i
-        when 400
-          raise InstagramBasicDisplayAPI::BadRequest, error_message_400(response)
-        when 403
-          raise InstagramBasicDisplayAPI::Forbidden, error_message_400(response)
-        when 404
-          raise InstagramBasicDisplayAPI::NotFound, error_message_400(response)
-        when 429
-          raise InstagramBasicDisplayAPI::TooManyRequests, error_message_400(response)
-        when 500
-          raise InstagramBasicDisplayAPI::InternalServerError, error_message_500(response, "Something is technically wrong.")
-        when 502
-          raise InstagramBasicDisplayAPI::BadGateway, error_message_500(response, "The server returned an invalid or incomplete response.")
-        when 503
-          raise InstagramBasicDisplayAPI::ServiceUnavailable, error_message_500(response, "Instagram is rate limiting your requests.")
-        when 504
-          raise InstagramBasicDisplayAPI::GatewayTimeout, error_message_500(response, "504 Gateway Time-out")
-        end
+        status = response[:status].to_i
+        next if status < 400
+
+        payload = parse_payload(response[:body])
+        klass   = exception_class(status, payload)
+        next unless klass
+
+        raise klass.new(error_message(response, status), http_status: status, payload: payload)
       end
     end
 
@@ -33,6 +30,55 @@ module InstagramBasicDisplayAPI
     end
 
     private
+
+    def exception_class(status, payload)
+      return InstagramBasicDisplayAPI::Unauthorized if access_token_error?(payload)
+
+      case status
+      when 400 then InstagramBasicDisplayAPI::BadRequest
+      when 401 then InstagramBasicDisplayAPI::Unauthorized
+      when 403 then InstagramBasicDisplayAPI::Forbidden
+      when 404 then InstagramBasicDisplayAPI::NotFound
+      when 429 then InstagramBasicDisplayAPI::TooManyRequests
+      when 500 then InstagramBasicDisplayAPI::InternalServerError
+      when 502 then InstagramBasicDisplayAPI::BadGateway
+      when 503 then InstagramBasicDisplayAPI::ServiceUnavailable
+      when 504 then InstagramBasicDisplayAPI::GatewayTimeout
+      end
+    end
+
+    # True when the response carries an OAuthException access-token error
+    # (code 190), whatever the HTTP status. Supports both the nested
+    # `{ "error": { "code": 190 } }` envelope and a flat `{ "code": 190 }`.
+    def access_token_error?(payload)
+      extract_code(payload) == OAUTH_ACCESS_TOKEN_ERROR_CODE
+    end
+
+    def extract_code(payload)
+      return nil unless payload.is_a?(Hash)
+
+      err = payload['error']
+      (err.is_a?(Hash) && err['code']) || payload['code']
+    end
+
+    def parse_payload(body)
+      return body if body.is_a?(Hash)
+      return {} unless body.is_a?(String) && !body.empty?
+
+      JSON.parse(body)
+    rescue JSON::ParserError
+      {}
+    end
+
+    def error_message(response, status)
+      case status
+      when 500 then error_message_500(response, 'Something is technically wrong.')
+      when 502 then error_message_500(response, 'The server returned an invalid or incomplete response.')
+      when 503 then error_message_500(response, 'Instagram is rate limiting your requests.')
+      when 504 then error_message_500(response, '504 Gateway Time-out')
+      else error_message_400(response)
+      end
+    end
 
     def error_message_400(response)
       "#{response[:method].to_s.upcase} #{response[:url].to_s}: #{response[:status]}#{error_body(response[:body])}"
